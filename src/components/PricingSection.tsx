@@ -15,11 +15,13 @@ function PricingCard({
   currency,
   onContact,
   index,
+  isMobile,
 }: {
   tier: ServiceTier;
   currency: 'ngn' | 'usd';
   onContact: (t: ServiceTier) => void;
   index: number;
+  isMobile: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -33,7 +35,7 @@ function PricingCard({
       ref={cardRef}
       className={`pricing-card reveal ${isFeatured ? 'is-featured' : ''}`}
       style={{
-        padding: '2rem',
+        padding: isMobile ? '1.5rem 1.25rem' : '2rem',
         display: 'flex',
         flexDirection: 'column',
         gap: 0,
@@ -45,8 +47,8 @@ function PricingCard({
       {tier.tag && (
         <div style={{
           position: 'absolute',
-          top: '1.5rem',
-          right: '1.5rem',
+          top: isMobile ? '1rem' : '1.5rem',
+          right: isMobile ? '1rem' : '1.5rem',
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: '0.55rem',
           letterSpacing: '0.2em',
@@ -118,7 +120,8 @@ function PricingCard({
         paddingBottom: '1.75rem',
         borderBottom: '1px solid #191919',
         display: 'flex',
-        gap: '1.5rem',
+        flexWrap: 'wrap',
+        gap: isMobile ? '0.5rem 1.5rem' : '1.5rem',
       }}>
         <span>DEL: {tier.delivery}</span>
         <span>SUPPORT: {tier.support}</span>
@@ -138,7 +141,6 @@ function PricingCard({
 
       {/* Features */}
       <div style={{ marginBottom: '2rem' }}>
-        {/* First 6 — always visible */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
           {tier.features.slice(0, 6).map((f, fi) => (
             <div
@@ -167,7 +169,6 @@ function PricingCard({
           ))}
         </div>
 
-        {/* Extra features — collapsible */}
         {hasMore && (
           <>
             <div
@@ -206,7 +207,6 @@ function PricingCard({
               </div>
             </div>
 
-            {/* Toggle button */}
             <button
               onClick={() => setExpanded((v) => !v)}
               data-hover="true"
@@ -299,6 +299,14 @@ function PricingCard({
 export function PricingSection({ currency }: PricingSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [modal, setModal] = useState<ServiceTier | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 600);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -334,49 +342,95 @@ export function PricingSection({ currency }: PricingSectionProps) {
             <div
               className="reveal"
               style={{
-                padding: '3rem 2rem 2rem',
-                display: 'flex',
-                alignItems: 'baseline',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '1rem',
+                padding: isMobile ? '1.5rem 1.25rem 1.25rem' : '3rem 2rem 2rem',
                 borderBottom: '1px solid #191919',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.5rem' }}>
-                <span style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.6rem',
-                  letterSpacing: '0.2em',
-                  color: '#2A2A2A',
-                  textTransform: 'uppercase',
+              {isMobile ? (
+                /* Mobile: meta row on top, title below */
+                <>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: '0.6rem',
+                  }}>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '0.55rem',
+                      letterSpacing: '0.2em',
+                      color: '#2A2A2A',
+                      textTransform: 'uppercase',
+                    }}>
+                      [{String(ci + 1).padStart(2, '0')}]
+                    </span>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '0.55rem',
+                      letterSpacing: '0.15em',
+                      color: '#2A2A2A',
+                      textTransform: 'uppercase',
+                    }}>
+                      {cat.rev} // {cat.tiers.length} MODULES
+                    </span>
+                  </div>
+                  <h2 style={{
+                    fontFamily: "'Syne', sans-serif",
+                    fontWeight: 800,
+                    fontSize: 'clamp(1.5rem, 7vw, 2.2rem)',
+                    letterSpacing: '-0.04em',
+                    color: '#E8E8E8',
+                    textTransform: 'uppercase',
+                    lineHeight: 1,
+                  }}>
+                    {cat.label}
+                  </h2>
+                </>
+              ) : (
+                /* Desktop: original layout */
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '1rem',
                 }}>
-                  [{String(ci + 1).padStart(2, '0')}]
-                </span>
-                <h2 style={{
-                  fontFamily: "'Syne', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 'clamp(1.8rem, 4vw, 3.5rem)',
-                  letterSpacing: '-0.04em',
-                  color: '#E8E8E8',
-                  textTransform: 'uppercase',
-                  lineHeight: 1,
-                }}>
-                  {cat.label}
-                </h2>
-              </div>
-              <span style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '0.6rem',
-                letterSpacing: '0.15em',
-                color: '#2A2A2A',
-                textTransform: 'uppercase',
-              }}>
-                {cat.rev} // {cat.tiers.length} MODULES
-              </span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.5rem' }}>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '0.6rem',
+                      letterSpacing: '0.2em',
+                      color: '#2A2A2A',
+                      textTransform: 'uppercase',
+                    }}>
+                      [{String(ci + 1).padStart(2, '0')}]
+                    </span>
+                    <h2 style={{
+                      fontFamily: "'Syne', sans-serif",
+                      fontWeight: 800,
+                      fontSize: 'clamp(1.8rem, 4vw, 3.5rem)',
+                      letterSpacing: '-0.04em',
+                      color: '#E8E8E8',
+                      textTransform: 'uppercase',
+                      lineHeight: 1,
+                    }}>
+                      {cat.label}
+                    </h2>
+                  </div>
+                  <span style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '0.6rem',
+                    letterSpacing: '0.15em',
+                    color: '#2A2A2A',
+                    textTransform: 'uppercase',
+                  }}>
+                    {cat.rev} // {cat.tiers.length} MODULES
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Cards grid — use gap:1px + parent bg trick for dividers */}
+            {/* Cards grid */}
             <div
               style={{
                 display: 'grid',
@@ -392,6 +446,7 @@ export function PricingSection({ currency }: PricingSectionProps) {
                   currency={currency}
                   onContact={(t) => setModal(t)}
                   index={ti}
+                  isMobile={isMobile}
                 />
               ))}
             </div>
@@ -401,7 +456,7 @@ export function PricingSection({ currency }: PricingSectionProps) {
         {/* Bottom strip */}
         <div style={{
           borderTop: '1px solid #191919',
-          padding: '1.5rem 2rem',
+          padding: isMobile ? '1.25rem' : '1.5rem 2rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -414,6 +469,7 @@ export function PricingSection({ currency }: PricingSectionProps) {
             letterSpacing: '0.15em',
             color: '#2A2A2A',
             textTransform: 'uppercase',
+            lineHeight: 1.7,
           }}>
             ALL PRICES EXCLUDING HOSTING & DOMAIN — CUSTOM QUOTES AVAILABLE
           </span>

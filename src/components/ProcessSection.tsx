@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -34,6 +34,14 @@ const steps = [
 
 export function ProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 600);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -60,19 +68,19 @@ export function ProcessSection() {
       <div
         className="reveal"
         style={{
-          padding: '3rem 2rem 2rem',
-          display: 'grid',
-          gridTemplateColumns: '1fr auto',
-          alignItems: 'baseline',
-          gap: '2rem',
-          borderBottom: '1px solid #191919',
+          padding: isMobile ? '1.5rem 1.25rem 1.25rem' : '3rem 2rem 2rem',
+          display: 'flex',
+          alignItems: isMobile ? 'flex-end' : 'baseline',
+          justifyContent: 'space-between',
+          gap: '1rem',
           flexWrap: 'wrap',
+          borderBottom: '1px solid #191919',
         }}
       >
         <h2 style={{
           fontFamily: "'Syne', sans-serif",
           fontWeight: 800,
-          fontSize: 'clamp(2rem, 5vw, 4.5rem)',
+          fontSize: isMobile ? 'clamp(1.6rem, 8vw, 2.2rem)' : 'clamp(2rem, 5vw, 4.5rem)',
           letterSpacing: '-0.04em',
           color: '#E8E8E8',
           textTransform: 'uppercase',
@@ -100,19 +108,20 @@ export function ProcessSection() {
             className="reveal"
             style={{
               display: 'grid',
-              gridTemplateColumns: '80px 1fr',
+              gridTemplateColumns: isMobile ? '1fr' : '80px 1fr',
               gap: 0,
               borderBottom: '1px solid #191919',
               transitionDelay: `${i * 0.1}s`,
             }}
           >
-            {/* Number column */}
+            {/* Number */}
             <div style={{
-              padding: '2rem',
-              borderRight: '1px solid #191919',
+              padding: isMobile ? '1.25rem 1.25rem 0' : '2rem',
+              borderRight: isMobile ? 'none' : '1px solid #191919',
               display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
+              alignItems: isMobile ? 'center' : 'flex-start',
+              justifyContent: isMobile ? 'flex-start' : 'center',
+              gap: isMobile ? '0.75rem' : 0,
             }}>
               <span style={{
                 fontFamily: "'JetBrains Mono', monospace",
@@ -123,21 +132,44 @@ export function ProcessSection() {
               }}>
                 {step.num}
               </span>
+              {/* On mobile, show the title inline next to the number */}
+              {isMobile && (
+                <h3 style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  letterSpacing: '-0.02em',
+                  color: '#E8E8E8',
+                  textTransform: 'uppercase',
+                  lineHeight: 1.1,
+                }}>
+                  {step.title}
+                </h3>
+              )}
             </div>
 
-            {/* Content column */}
-            <div style={{ padding: '2rem', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem', alignItems: 'start' }}>
-              <h3 style={{
-                fontFamily: "'Syne', sans-serif",
-                fontWeight: 700,
-                fontSize: 'clamp(1rem, 2vw, 1.3rem)',
-                letterSpacing: '-0.02em',
-                color: '#E8E8E8',
-                textTransform: 'uppercase',
-                lineHeight: 1.1,
-              }}>
-                {step.title}
-              </h3>
+            {/* Content */}
+            <div style={{
+              padding: isMobile ? '0.75rem 1.25rem 1.5rem' : '2rem',
+              display: isMobile ? 'block' : 'grid',
+              gridTemplateColumns: isMobile ? undefined : '1fr 2fr',
+              gap: isMobile ? undefined : '2rem',
+              alignItems: 'start',
+            }}>
+              {/* Title — desktop only (mobile shows it beside the number) */}
+              {!isMobile && (
+                <h3 style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontWeight: 700,
+                  fontSize: 'clamp(1rem, 2vw, 1.3rem)',
+                  letterSpacing: '-0.02em',
+                  color: '#E8E8E8',
+                  textTransform: 'uppercase',
+                  lineHeight: 1.1,
+                }}>
+                  {step.title}
+                </h3>
+              )}
               <p style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontSize: '0.875rem',
@@ -155,11 +187,12 @@ export function ProcessSection() {
       <div
         className="reveal"
         style={{
-          padding: '2rem',
+          padding: isMobile ? '1.5rem 1.25rem' : '2rem',
           background: '#0B0B0B',
           display: 'flex',
-          alignItems: 'center',
-          gap: '2rem',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'flex-start' : 'center',
+          gap: isMobile ? '0.75rem' : '2rem',
           flexWrap: 'wrap',
           borderTop: '1px solid #191919',
         }}
@@ -170,6 +203,7 @@ export function ProcessSection() {
           letterSpacing: '0.2em',
           color: '#C8952A',
           textTransform: 'uppercase',
+          flexShrink: 0,
         }}>
           [ GUARANTEE ]
         </div>
