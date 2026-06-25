@@ -1,12 +1,20 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
+    // Only activate on devices with a fine pointer (mouse), not touch screens
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    setActive(true);
+  }, []);
+
+  useEffect(() => {
+    if (!active) return;
     const dot = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) return;
@@ -48,7 +56,9 @@ export function CustomCursor() {
       window.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [active]);
+
+  if (!active) return null;
 
   return (
     <div className="cursor" aria-hidden>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ContactModalProps {
   open: boolean;
@@ -11,6 +11,14 @@ interface ContactModalProps {
 
 export function ContactModal({ open, packageTitle, packagePrice, onClose }: ContactModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 600);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const el = overlayRef.current;
@@ -54,7 +62,7 @@ export function ContactModal({ open, packageTitle, packagePrice, onClose }: Cont
         style={{
           background: '#0B0B0B',
           border: '1px solid #242424',
-          padding: '3rem',
+          padding: isMobile ? '1.75rem 1.25rem' : '3rem',
           width: '90vw',
           maxWidth: 560,
           position: 'relative',
@@ -149,14 +157,19 @@ export function ContactModal({ open, packageTitle, packagePrice, onClose }: Cont
               cursor: 'pointer',
               transition: 'opacity 0.2s',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'flex-start' : 'center',
+              justifyContent: isMobile ? 'flex-start' : 'space-between',
+              gap: isMobile ? '0.35rem' : 0,
+              textAlign: 'left',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; }}
             onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
           >
             <span>EMAIL INQUIRY</span>
-            <span>abakwecarrington@gmail.com</span>
+            <span style={{ fontSize: isMobile ? '0.6rem' : '0.7rem', opacity: isMobile ? 0.75 : 1 }}>
+              abakwecarrington@gmail.com
+            </span>
           </button>
 
           <button
