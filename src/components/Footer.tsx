@@ -1,4 +1,3 @@
-import Image from 'next/image';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -18,12 +17,11 @@ export function Footer() {
       }}>
         {/* Brand column */}
         <div style={{ background: '#060606', padding: '3rem 2rem' }}>
-          <Image
-            src="/logo_white.png"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/pricing/logo_white.png"
             alt="CyberSage"
-            width={56}
-            height={56}
-            style={{ objectFit: 'contain', marginBottom: '1.5rem' }}
+            style={{ width: 56, height: 56, objectFit: 'contain', marginBottom: '1.5rem', display: 'block' }}
           />
           <p style={{
             fontFamily: "'Space Grotesk', sans-serif",

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ThreeBackground } from './ThreeBackground';
 import { allTiers } from '@/lib/pricing-data';
@@ -55,12 +54,11 @@ export function HeroSection({ currency, onToggle }: HeroSectionProps) {
     >
       {/* LAYER 1 — hero background photo */}
       <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <Image
-          src="/hero_p.png"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/pricing/hero_p.png"
           alt=""
-          fill
-          priority
-          style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
         />
       </div>
 

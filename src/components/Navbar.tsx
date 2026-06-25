@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
@@ -54,13 +53,11 @@ export function Navbar() {
         style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}
         title="CyberSage portfolio"
       >
-        <Image
-          src="/logo_white_horizontal.png"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/pricing/logo_white_horizontal.png"
           alt="CyberSage"
-          width={140}
-          height={36}
-          style={{ objectFit: 'contain', height: isMobile ? 20 : 28, width: 'auto' }}
-          priority
+          style={{ objectFit: 'contain', height: isMobile ? 20 : 28, width: 'auto', display: 'block' }}
         />
       </a>
 
