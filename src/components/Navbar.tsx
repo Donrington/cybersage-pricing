@@ -55,7 +55,7 @@ export function Navbar() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/pricing/logo_white_horizontal.png"
+          src="/pricing/sage_horiz1_white.png"
           alt="CyberSage"
           style={{ objectFit: 'contain', height: isMobile ? 20 : 28, width: 'auto', display: 'block' }}
         />
