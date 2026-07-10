@@ -56,7 +56,7 @@ export function HeroSection({ currency, onToggle }: HeroSectionProps) {
       <div aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/pricing/hero_p.png"
+          src="/pricing/hero_main.jpg"
           alt=""
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
         />
