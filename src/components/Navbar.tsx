@@ -57,7 +57,7 @@ export function Navbar() {
         <img
           src="/pricing/sage_horiz1_white.png"
           alt="CyberSage"
-          style={{ objectFit: 'contain', height: isMobile ? 20 : 28, width: 'auto', display: 'block' }}
+          style={{ objectFit: 'contain', height: isMobile ? 32 : 44, width: 'auto', display: 'block' }}
         />
       </a>
 
