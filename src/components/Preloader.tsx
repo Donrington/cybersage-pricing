@@ -99,7 +99,7 @@ export function Preloader({ onDone }: PreloaderProps) {
           <div style={{ animation: 'preloaderLogo 1.8s ease-in-out infinite' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/pricing/logo_white.png"
+              src="/pricing/sage_prim_white.png"
               alt="CyberSage"
               width={64}
               height={64}
